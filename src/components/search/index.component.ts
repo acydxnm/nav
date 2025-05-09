@@ -75,14 +75,11 @@ export class SearchComponent {
       : search.logo || search.darkLogo
   }
 
+  // ✅ 用户操作时才允许触发聚焦
   private inputFocus() {
     setTimeout(() => {
       this.input?.nativeElement?.focus()
     }, 100)
-  }
-
-  ngAfterViewInit() {
-    this.inputFocus()
   }
 
   onSelectChange() {
@@ -103,7 +100,6 @@ export class SearchComponent {
       } else {
         window.open(this.currentEngine.url + this.keyword)
       }
-
       return
     }
 
