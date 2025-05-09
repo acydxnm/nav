@@ -1,7 +1,4 @@
-<div
-  class="search-engine"
-  *ngIf="searchEngineList && searchEngineList.length > 0"
->
+<div class="search-engine" *ngIf="searchEngineList && searchEngineList.length > 0">
   <img
     *ngIf="showLogo && logoImage"
     class="pointer-events-none mb-4 select-none"
@@ -9,7 +6,20 @@
     [ngStyle]="{ maxHeight: search.height + 'px' }"
   />
 
+  <!-- 假输入框（初始展示） -->
   <div
+    *ngIf="!inputReady"
+    class="fake-input-wrapper input-wrapper dark-bg dark-border-color max-[768px]:!w-[90%]"
+    (click)="enableRealInput()"
+  >
+    <div class="fake-input">
+      {{ keyword || currentEngine.placeholder || '请输入关键词' }}
+    </div>
+  </div>
+
+  <!-- 真输入框 -->
+  <div
+    *ngIf="inputReady"
     class="input-wrapper dark-bg dark-border-color max-[768px]:!w-[90%]"
     [class.removeAddon]="currentEngine.url"
   >
@@ -22,11 +32,9 @@
       <input
         type="text"
         nz-input
-        class="prevent-auto-focus"
-        [attr.readonly]="!inputReady ? true : null"
-        [placeholder]="currentEngine.placeholder || ''"
+        class="real-input"
         [(ngModel)]="keyword"
-        id="search-engine-input"
+        [placeholder]="currentEngine.placeholder || ''"
         (keyup)="onKey($event)"
         autocomplete="off"
         #input
@@ -50,12 +58,7 @@
             *ngFor="let item of searchEngineList; let i = index"
             (click)="clickEngineItem(i)"
           >
-            <app-logo
-              *ngIf="item.icon"
-              [src]="item.icon"
-              [name]="item.name"
-              [size]="20"
-            />
+            <app-logo *ngIf="item.icon" [src]="item.icon" [name]="item.name" [size]="20" />
             <span class="name2 dark-text ellipsis">{{ item.name }}</span>
           </div>
         </div>
@@ -63,10 +66,7 @@
     </ng-template>
 
     <ng-template #suffixIcon>
-      <i
-        class="search-icon iconfont iconsousuo dark-text"
-        (click)="triggerSearch()"
-      ></i>
+      <i class="search-icon iconfont iconsousuo dark-text" (click)="triggerSearch()"></i>
     </ng-template>
 
     <ng-template #addOnBeforeTemplate>
@@ -75,19 +75,15 @@
         *ngIf="!currentEngine.url"
         (ngModelChange)="onSelectChange()"
       >
-        <nz-option [nzLabel]="$t('_default')" [nzValue]="SearchType.All" />
-        <nz-option [nzLabel]="$t('_class')" [nzValue]="SearchType.Class" />
-        <nz-option [nzLabel]="$t('_tag')" [nzValue]="SearchType.Tag" />
-        <nz-option [nzLabel]="$t('_title')" [nzValue]="SearchType.Title" />
-        <nz-option [nzLabel]="$t('_desc')" [nzValue]="SearchType.Desc" />
-        <nz-option [nzLabel]="$t('_link')" [nzValue]="SearchType.Url" />
-        <nz-option [nzLabel]="$t('_current')" [nzValue]="SearchType.Current" />
-        <nz-option [nzLabel]="$t('_quick')" [nzValue]="SearchType.Quick" />
-        <nz-option
-          *ngIf="isLogin"
-          nzLabel="ID"
-          [nzValue]="SearchType.Id"
-        />
+        <nz-option [nzLabel]="$t('_default')" [nzValue]="SearchType.All"></nz-option>
+        <nz-option [nzLabel]="$t('_class')" [nzValue]="SearchType.Class"></nz-option>
+        <nz-option [nzLabel]="$t('_tag')" [nzValue]="SearchType.Tag"></nz-option>
+        <nz-option [nzLabel]="$t('_title')" [nzValue]="SearchType.Title"></nz-option>
+        <nz-option [nzLabel]="$t('_desc')" [nzValue]="SearchType.Desc"></nz-option>
+        <nz-option [nzLabel]="$t('_link')" [nzValue]="SearchType.Url"></nz-option>
+        <nz-option [nzLabel]="$t('_current')" [nzValue]="SearchType.Current"></nz-option>
+        <nz-option [nzLabel]="$t('_quick')" [nzValue]="SearchType.Quick"></nz-option>
+        <nz-option *ngIf="isLogin" nzLabel="ID" [nzValue]="SearchType.Id"></nz-option>
       </nz-select>
     </ng-template>
   </div>
