@@ -2,7 +2,7 @@
 // Copyright @ 2018-present xiejiahe. All rights reserved.
 // See https://github.com/xjh22222228/nav
 
-import { Component } from '@angular/core'
+import { Component, OnInit, AfterViewInit } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import {
   Router,
@@ -53,7 +53,7 @@ import event from 'src/utils/mitt'
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit, AfterViewInit {
   readonly isLogin: boolean = isLogin
   fetchIng = true
 
@@ -237,6 +237,18 @@ export class AppComponent {
         event.emit('CREATE_WEB', {
           isKeyboard: true,
         })
+      }
+    })
+  }
+
+  // ✅ 新增：阻止切换标签时自动激活输入框（防输入法弹出）
+  ngAfterViewInit() {
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) {
+        const activeEl = document.activeElement as HTMLElement
+        if (activeEl && activeEl.tagName === 'INPUT') {
+          activeEl.blur()
+        }
       }
     })
   }
