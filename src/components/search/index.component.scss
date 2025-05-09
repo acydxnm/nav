@@ -73,7 +73,7 @@
   }
 }
 
-// ✅ 新增：阻止初始自动交互/光标闪
+// ✅ 新增：防止初始自动交互和光标出现
 input[nz-input].prevent-auto-focus {
   pointer-events: none;
   opacity: 0;
