@@ -22,6 +22,7 @@
       <input
         type="text"
         nz-input
+        class="prevent-auto-focus"
         [placeholder]="currentEngine.placeholder || ''"
         [(ngModel)]="keyword"
         id="search-engine-input"
@@ -30,6 +31,7 @@
         #input
       />
     </nz-input-group>
+
     <ng-template #prefixIcon>
       <div
         class="left-icon"
@@ -65,6 +67,7 @@
         (click)="triggerSearch()"
       ></i>
     </ng-template>
+
     <ng-template #addOnBeforeTemplate>
       <nz-select
         [(ngModel)]="searchTypeValue"
