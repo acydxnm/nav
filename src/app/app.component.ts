@@ -242,14 +242,26 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   // ✅ 新增：阻止切换标签时自动激活输入框（防输入法弹出）
-  ngAfterViewInit() {
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) {
-        const activeEl = document.activeElement as HTMLElement
-        if (activeEl && activeEl.tagName === 'INPUT') {
-          activeEl.blur()
+ ngAfterViewInit() {
+  // 当标签页重新激活时，强制移除任何输入框焦点，防止光标/输入法弹出
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      setTimeout(() => {
+        const activeEl = document.activeElement as HTMLElement;
+        const isInputLike = ['INPUT', 'TEXTAREA'].includes(activeEl?.tagName || '');
+        if (isInputLike && typeof activeEl.blur === 'function') {
+          activeEl.blur();
         }
-      }
-    })
-  }
+      }, 0);
+    }
+  });
+
+  // 可选：保险机制，防止有些浏览器不触发 visibilitychange
+  window.addEventListener('focus', () => {
+    const activeEl = document.activeElement as HTMLElement;
+    const isInputLike = ['INPUT', 'TEXTAREA'].includes(activeEl?.tagName || '');
+    if (isInputLike && typeof activeEl.blur === 'function') {
+      activeEl.blur();
+    }
+  });
 }
