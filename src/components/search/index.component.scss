@@ -73,14 +73,22 @@
   }
 }
 
-// ✅ 新增：防止初始自动交互和光标出现
-input[nz-input].prevent-auto-focus {
-  pointer-events: none;
-  opacity: 0;
-}
+.fake-input-wrapper {
+  position: relative;
+  width: 650px;
+  max-width: 95%;
+  background: #fff;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: text;
 
-input[nz-input].prevent-auto-focus.ready {
-  pointer-events: auto;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
+  .fake-input {
+    padding: 7px 10px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
