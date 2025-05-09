@@ -1,7 +1,9 @@
 // 开源项目，未经作者同意，不得以抄袭/复制代码/修改源代码版权信息。
 // Copyright @ 2018-present xiejiahe. All rights reserved.
 
-import { Component, Input, ViewChild, ElementRef } from '@angular/core'
+import {
+  Component, Input, ViewChild, ElementRef, AfterViewInit, Renderer2
+} from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
 import {
@@ -37,7 +39,7 @@ import event from 'src/utils/mitt'
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss'],
 })
-export class SearchComponent {
+export class SearchComponent implements AfterViewInit {
   @ViewChild('input', { static: false }) input!: ElementRef
   @Input() size: 'small' | 'default' | 'large' = 'large'
   @Input() showLogo = true
@@ -57,22 +59,19 @@ export class SearchComponent {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private renderer: Renderer2 // ✅ 新增
   ) {
     event.on('SEARCH_FOCUS', () => {
       this.inputFocus()
     })
+
     if (!this.isLogin && this.searchTypeValue === SearchType.Id) {
       this.searchTypeValue = SearchType.All
     }
+
     event.on('EVENT_DARK', (isDark: unknown) => {
       this.isDark = isDark as boolean
     })
-  }
-
-  get logoImage() {
-    return this.isDark
-      ? search.darkLogo || search.logo
-      : search.logo || search.darkLogo
   }
 
   // ✅ 用户操作时才允许触发聚焦
@@ -80,6 +79,19 @@ export class SearchComponent {
     setTimeout(() => {
       this.input?.nativeElement?.focus()
     }, 100)
+  }
+
+  ngAfterViewInit() {
+    // ✅ 延迟恢复交互能力
+    setTimeout(() => {
+      this.renderer.addClass(this.input.nativeElement, 'ready')
+    }, 400)
+  }
+
+  get logoImage() {
+    return this.isDark
+      ? search.darkLogo || search.logo
+      : search.logo || search.darkLogo
   }
 
   onSelectChange() {
@@ -95,11 +107,10 @@ export class SearchComponent {
 
   triggerSearch() {
     if (this.currentEngine.url) {
-      if (this.currentEngine.url.includes('${q}')) {
-        window.open(this.currentEngine.url.replaceAll('${q}', this.keyword))
-      } else {
-        window.open(this.currentEngine.url + this.keyword)
-      }
+      const url = this.currentEngine.url.includes('${q}')
+        ? this.currentEngine.url.replaceAll('${q}', this.keyword)
+        : this.currentEngine.url + this.keyword
+      window.open(url)
       return
     }
 
