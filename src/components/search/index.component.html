@@ -34,6 +34,7 @@
         nz-input
         class="real-input"
         [(ngModel)]="keyword"
+        ...
         [placeholder]="currentEngine.placeholder || ''"
         (keyup)="onKey($event)"
         autocomplete="off"
