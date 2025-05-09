@@ -23,6 +23,7 @@
         type="text"
         nz-input
         class="prevent-auto-focus"
+        [attr.readonly]="!inputReady ? true : null"
         [placeholder]="currentEngine.placeholder || ''"
         [(ngModel)]="keyword"
         id="search-engine-input"
@@ -74,43 +75,19 @@
         *ngIf="!currentEngine.url"
         (ngModelChange)="onSelectChange()"
       >
-        <nz-option
-          [nzLabel]="$t('_default')"
-          [nzValue]="SearchType.All"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_class')"
-          [nzValue]="SearchType.Class"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_tag')"
-          [nzValue]="SearchType.Tag"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_title')"
-          [nzValue]="SearchType.Title"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_desc')"
-          [nzValue]="SearchType.Desc"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_link')"
-          [nzValue]="SearchType.Url"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_current')"
-          [nzValue]="SearchType.Current"
-        ></nz-option>
-        <nz-option
-          [nzLabel]="$t('_quick')"
-          [nzValue]="SearchType.Quick"
-        ></nz-option>
+        <nz-option [nzLabel]="$t('_default')" [nzValue]="SearchType.All" />
+        <nz-option [nzLabel]="$t('_class')" [nzValue]="SearchType.Class" />
+        <nz-option [nzLabel]="$t('_tag')" [nzValue]="SearchType.Tag" />
+        <nz-option [nzLabel]="$t('_title')" [nzValue]="SearchType.Title" />
+        <nz-option [nzLabel]="$t('_desc')" [nzValue]="SearchType.Desc" />
+        <nz-option [nzLabel]="$t('_link')" [nzValue]="SearchType.Url" />
+        <nz-option [nzLabel]="$t('_current')" [nzValue]="SearchType.Current" />
+        <nz-option [nzLabel]="$t('_quick')" [nzValue]="SearchType.Quick" />
         <nz-option
           *ngIf="isLogin"
           nzLabel="ID"
           [nzValue]="SearchType.Id"
-        ></nz-option>
+        />
       </nz-select>
     </ng-template>
   </div>
