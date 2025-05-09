@@ -2,7 +2,7 @@
 // Copyright @ 2018-present xiejiahe. All rights reserved.
 
 import {
-  Component, Input, ViewChild, ElementRef, AfterViewInit, Renderer2
+  Component, Input, ViewChild, ElementRef
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +39,7 @@ import event from 'src/utils/mitt';
   templateUrl: './index.component.html',
   styleUrls: ['./index.component.scss'],
 })
-export class SearchComponent implements AfterViewInit {
+export class SearchComponent {
   @ViewChild('input', { static: false }) input!: ElementRef;
   @Input() size: 'small' | 'default' | 'large' = 'large';
   @Input() showLogo = true;
@@ -55,14 +55,13 @@ export class SearchComponent implements AfterViewInit {
   keyword = queryString().q;
   isDark = isDark();
 
-  inputReady = false; // ✅ 控制 readonly 解除
+  inputReady = false;
 
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private renderer: Renderer2
   ) {
-    event.on('SEARCH_FOCUS', () => this.inputFocus());
+    event.on('SEARCH_FOCUS', () => this.enableRealInput());
 
     if (!this.isLogin && this.searchTypeValue === SearchType.Id) {
       this.searchTypeValue = SearchType.All;
@@ -73,32 +72,25 @@ export class SearchComponent implements AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.inputReady = true;
-      this.renderer.addClass(this.input.nativeElement, 'ready');
-      this.renderer.removeAttribute(this.input.nativeElement, 'readonly');
-    }, 400);
-  }
-
   get logoImage() {
     return this.isDark ? search.darkLogo || search.logo : search.logo || search.darkLogo;
   }
 
-  private inputFocus() {
+  enableRealInput() {
+    this.inputReady = true;
     setTimeout(() => {
       this.input?.nativeElement?.focus();
     }, 100);
   }
 
   onSelectChange() {
-    this.inputFocus();
+    this.enableRealInput();
   }
 
   clickEngineItem(index: number) {
     document.body.click();
     this.currentEngine = this.searchEngineList[index];
-    this.inputFocus();
+    this.enableRealInput();
     setDefaultSearchEngine(this.currentEngine);
   }
 
