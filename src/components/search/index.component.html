@@ -24,7 +24,7 @@
         nz-input
         [placeholder]="currentEngine.placeholder || ''"
         [(ngModel)]="keyword"
-        autofocus
+        ...
         id="search-engine-input"
         (keyup)="onKey($event)"
         autocomplete="off"
